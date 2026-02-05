@@ -1,0 +1,9 @@
+# Railway CLI 자동 배포 명령어
+railway login
+railway link dda13b19-c392-456a-9b93-4eb146228f3e
+railway variables set ANTHROPIC_API_KEY="sk-ant-your-key"
+railway variables set DEBUG="false"
+railway add postgresql
+railway add redis
+railway up
+railway logs --follow
