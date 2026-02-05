@@ -1,0 +1,30 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "pip install --no-cache-dir -e ."
+  },
+  "deploy": {
+    "startCommand": "uvicorn src.api:app --host 0.0.0.0 --port $PORT --workers 2",
+    "healthcheckPath": "/health",
+    "healthcheckTimeout": 300,
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 3
+  },
+  "environments": {
+    "production": {
+      "variables": {
+        "PYTHON_VERSION": "3.11",
+        "DEBUG": "false",
+        "WORKERS": "2"
+      }
+    },
+    "staging": {
+      "variables": {
+        "PYTHON_VERSION": "3.11",
+        "DEBUG": "true",
+        "WORKERS": "1"
+      }
+    }
+  }
+}

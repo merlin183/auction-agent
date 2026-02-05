@@ -1,0 +1,51 @@
+name: Deploy to Railway
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # 수동 배포 허용
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production  # GitHub Environment 사용 시
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: |
+          npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        run: |
+          railway up --service ${{ secrets.RAILWAY_SERVICE_ID }}
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Wait for deployment
+        run: sleep 30
+
+      - name: Health check
+        run: |
+          HEALTH_URL="${{ secrets.RAILWAY_APP_URL }}/health"
+          for i in {1..10}; do
+            if curl -f "$HEALTH_URL"; then
+              echo "✓ Deployment successful"
+              exit 0
+            fi
+            echo "Waiting for deployment... ($i/10)"
+            sleep 10
+          done
+          echo "✗ Deployment health check failed"
+          exit 1
+
+      - name: Notify deployment status
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: 'Deployment ${{ job.status }}'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        continue-on-error: true
