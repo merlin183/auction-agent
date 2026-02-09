@@ -1,7 +1,7 @@
 # Minimal requirements for Railway deployment
 # LangChain Core
 langchain==0.3.14
-langgraph==0.2.60
+langgraph==1.0.8
 langchain-anthropic==0.2.8
 langchain-core==0.3.29
 
