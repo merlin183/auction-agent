@@ -21,7 +21,7 @@ dependencies = [
     # Database
     "sqlalchemy==2.0.36",
     "asyncpg==0.30.0",
-    "redis==5.2.1",
+    "redis==7.1.0",
 
     # Utilities
     "python-dotenv==1.0.1",
